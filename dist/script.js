@@ -53,8 +53,7 @@ function renderLayer () {
     extruded: false,
     getPosition: d => [Number(d.longitude), Number(d.latitude)],
     opacity: 0.5,
-    cellSizePixels: 4,
-    onHover:
+    cellSizePixels: 4
   });
 
   // const hexagonLayer = new deck.HexagonLayer({
