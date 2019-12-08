@@ -31,7 +31,7 @@
 
       <div>
         <label>Price Range</label>
-        <input id="price" type="range" min="0" max="20000" step="100" value="500"></input>
+        <input id="price" type="range" min="0" max="2000" step="100" value="500"></input>
         <span id="price-value"></span>
       </div>
     </div>
@@ -98,7 +98,7 @@ var tooltip = d3.select("#control-panel").append("div")
 
 // dataset 
 
-function drawHist(selectedArea){
+function drawHist(selectedArea, maxValue){
   console.log("called"); 
 
    // var selectedArea = "Brooklyn"
@@ -133,7 +133,7 @@ function drawHist(selectedArea){
     // var xMin = d3.min(data, function(d){return d.price}); 
     var xMin = 0
     // var xMax = d3.max(data, function(d){return d.price}); 
-    var xMax = 400; 
+    var xMax = maxValue; 
     x.domain([xMin, xMax]).nice(); 
 
 
@@ -246,8 +246,17 @@ function drawHist(selectedArea){
 
                             console.log(selectedArea);
 
-                            drawHist(selectedArea); 
+                            drawHist(selectedArea, maxValue); 
                         })
+
+      var slider = d3.select("#price")
+                      .on("change", function(d){
+                        maxValue = document.getElementById("price").value; 
+                        console.log(maxValue); 
+                        drawHist(selectedArea, maxValue); 
+
+
+                      })
 
 
 
@@ -284,7 +293,7 @@ function drawHist(selectedArea){
 }
 
 var selectedArea = "all"
-drawHist(selectedArea); 
+drawHist(selectedArea, 500); 
 
 
 
