@@ -20,13 +20,13 @@
     </div>
 
     <div id='menu'>
-      <select>
-        <option id='all' value="all">All</option>
-        <option id='bronx' value="bronx">Bronx</option>
-        <option id='brooklyn' value="brooklyn">Brooklyn</option>
-        <option id='manhattan' value="manhattan">Manhattan</option>
-        <option id='queens' value="queens">Queens</option>
-        <option id='statenIsland' value="statenIsland">Staten Island</option>
+      <select id='dropdown'>
+        <option value="all">All</option>
+        <option value="Bronx">Bronx</option>
+        <option value="Brooklyn">Brooklyn</option>
+        <option value="Manhattan">Manhattan</option>
+        <option value="Queens">Queens</option>
+        <option value="Staten Island">Staten Island</option>
       </select>
 
       <div>
@@ -56,7 +56,7 @@
 <script type="text/javascript">
 
   // Set up the bounds of the visualization
-var margine = {top: 20, right:20, bottom:50, left:40}; 
+var margine = {top: 20, right:20, bottom:50, left:60}; 
 var width = 500 - margine.right - margine.left; 
 var height = 200 - margine.top - margine.bottom; 
 
@@ -98,13 +98,13 @@ var tooltip = d3.select("#control-panel").append("div")
 
 // dataset 
 
-// function drawHist(selectedArea){
+function drawHist(selectedArea){
   console.log("called"); 
 
-   var selectedArea = "Brooklyn"
+   // var selectedArea = "Brooklyn"
 
-  // svg.selectAll(".bar").remove()
-  // svg.selectAll("g").remove()
+  svg.selectAll(".bar").remove()
+  svg.selectAll("g").remove()
   // svg.selectAll("option.dropdown").remove()
 
   // selector.remove(); 
@@ -118,7 +118,13 @@ var tooltip = d3.select("#control-panel").append("div")
 
     var original = data; 
 
-    data = original.filter(function(d){return d.neighbourhood_group == selectedArea;});
+    if (selectedArea == "all") {
+      data = original; 
+    } else {
+      data = original.filter(function(d){return d.neighbourhood_group == selectedArea;});  
+    }
+
+    
 
     data.forEach(function(d){
       d["price"] = +d["price"];  
@@ -234,6 +240,17 @@ var tooltip = d3.select("#control-panel").append("div")
               .style("opacity", 0); 
                });  
 
+      var selector = d3.select("#menu")
+                        .on("change", function(d){
+                            selectedArea = document.getElementById("dropdown").value; 
+
+                            console.log(selectedArea);
+
+                            drawHist(selectedArea); 
+                        })
+
+
+
     // selector.remove(); 
     // selector.exit().remove();
     // var selector = d3.select("#drop")
@@ -264,10 +281,10 @@ var tooltip = d3.select("#control-panel").append("div")
   }); 
 
 
-// }
+}
 
-// var selectedArea = "Brooklyn"
-// drawHist(selectedArea); 
+var selectedArea = "all"
+drawHist(selectedArea); 
 
 
 
