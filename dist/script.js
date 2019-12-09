@@ -8,32 +8,8 @@ const deckgl = new deck.DeckGL({
   maxZoom: 15,
   pitch: 0,
   bearing: 0
-
-  //Old
-  // longitude: -1.4157,
-  // latitude: 52.2324,
-  // zoom: 6,
-  // minZoom: 5,
-  // maxZoom: 15,
 });
 
-
-//
-// var layerList = document.getElementById('menu');
-// var inputs = layerList.getElementsByTagName('input');
-//
-// function switchLayer(layer) {
-// var layerId = layer.target.id;
-// deckgl.setStyle('mapbox://styles/mapbox/' + layerId);
-// }
-//
-// for (var i = 0; i < inputs.length; i++) {
-// inputs[i].onclick = switchLayer;
-// }
-
-const data = d3.csv('../data/AB_NYC_2019.csv');
-
-const regions = ['radius', 'coverage', 'upperPercentile'];
 
 const COLOR_RANGE = [
   [1, 152, 189],
@@ -44,36 +20,75 @@ const COLOR_RANGE = [
   [209, 55, 78]
 ];
 
-// OPTIONS.forEach(key => {
-//   document.getElementById(key).oninput = renderLayer;
-// });
-//
-// var layerList = document.getElementById('menu');
-// var inputs = layerList.getElementsByTagName('input');
-//
-// function switchLayer(layer) {
-// var layerId = layer.target.id;
-// map.setStyle('mapbox://styles/mapbox/' + layerId);
-// }
-//
-// for (var i = 0; i < inputs.length; i++) {
-// inputs[i].onclick = switchLayer;
-// }
 
-renderLayer();
 
-function renderLayer() {
-  // const options = {};
-  // OPTIONS.forEach(key => {
-  //   const value = +document.getElementById(key).value;
-  //   document.getElementById(key + '-value').innerHTML = value;
-  //   options[key] = value;
-  //  });
+var allData = d3.csv('../data/AB_NYC_2019.csv');
+var bronx = d3.csv('../data/Bronx.csv');
+var brooklyn = d3.csv('../data/Brooklyn.csv');
+var manhattan = d3.csv('../data/Manhattan.csv');
+var queens = d3.csv('../data/Queens.csv');
+var statenIsland = d3.csv('../data/StatenIsland.csv');
 
-  const hexagonLayer = new deck.ScreenGridLayer({
+var selectedRegion = "all"
+filterData(allData, selectedRegion, 500)
+renderLayer(allData);
+
+//Handling both price and region
+const areaDropDown = document.querySelector('.regions')
+const priceSlider = document.querySelector('.price')
+
+document.body.addEventListener('change', event => {
+  if (event.target !== areaDropDown && event.target !== priceSlider) {
+    return
+  } else {
+    if (event.target == areaDropDown) {
+      var maxPrice = document.getElementById("price").value;
+      var region = `${event.target.value}`;
+
+      console.log("change region : ", maxPrice, region);
+      switch (region) {
+        case "Bronx":
+          console.log("Bronx")
+          filterData(bronx, maxPrice);
+          break;
+        case "Brooklyn":
+          filterData(brooklyn, maxPrice);
+          break;
+        case "Manhattan":
+          filterData(manhattan, maxPrice);
+          break;
+        case "Queens":
+          filterData(queens, maxPrice);
+          break;
+        case "Staten Island":
+          filterData(statenIsland, maxPrice);
+          break;
+        default:
+          filterData(allData, maxPrice);
+      }
+    }
+     else {
+      var region = document.getElementById("dropdown").value;
+      var maxPrice = `${event.target.value}`;
+
+      //TODO call filerData function
+      console.log("change price : ", maxPrice, region)
+    }
+  }
+});
+
+
+function filterData(data, price) {
+
+  renderLayer(data);
+
+}
+
+function renderLayer(data) {
+  const screenGridLayer = new deck.ScreenGridLayer({
     id: 'grid',
     colorRange: COLOR_RANGE,
-    data,
+    data: data,
     elevationRange: [0, 100000],
     elevationScale: 250,
     extruded: false,
@@ -82,22 +97,7 @@ function renderLayer() {
     cellSizePixels: 4
   });
 
-  // const hexagonLayer = new deck.HexagonLayer({
-  //   id: 'heatmap',
-  //   colorRange: COLOR_RANGE,
-  //   data,
-  //   elevationRange: [0, 1000],
-  //   elevationScale: 250,
-  //   extruded: true,
-  //   getPosition: d => [Number(d.longitude), Number(d.latitude)],
-  //   opacity: 1,
-  //   pickable: true,
-  //   autoHighlight: true,
-  //   // onHover:
-  //     ...options
-  // });
-
   deckgl.setProps({
-    layers: [hexagonLayer]
+    layers: [screenGridLayer]
   });
 }
