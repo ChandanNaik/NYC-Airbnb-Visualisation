@@ -31,16 +31,18 @@
         <option value="Queens">Queens</option>
         <option value="Staten Island">Staten Island</option>
       </select>
+      &nbsp;&nbsp;&nbsp;&nbsp;
         <label>Price Range</label>
+        &nbsp;&nbsp;
         <input id="price" type="range" min="0" max="2000" step="100" value="500" class="slider"></input>
-        <span id="price-value"> hello</span>
+        <span id="price-value">500</span>
     </div>
-   
+
 
     <div class="container">
       <div class="row">
         <div class="col-sm">
-          <h6>Dist of AirBnB listings over price</h6>
+          <h6>Distribution of AirBnB listings over price</h6>
            <svg width="200" height="200" id="svg1"></svg>
         </div>
         <div class="col-sm">
@@ -86,26 +88,26 @@
 <script type="text/javascript">
 
   // Set up the bounds of the visualization
-var margine = {top: 20, right:20, bottom:50, left:100}; 
-var width = 500 - margine.right - margine.left; 
-var height = 200 - margine.top - margine.bottom; 
+var margine = {top: 20, right:20, bottom:50, left:100};
+var width = 500 - margine.right - margine.left;
+var height = 200 - margine.top - margine.bottom;
 
 // Set up the scales (the pieces that will convert from the data to the screen)
 var x = d3.scaleLinear()
       // .domain([1960, 2010])
-      .range([0, width]);  
+      .range([0, width]);
 
 var y = d3.scaleLinear()
-      .range([height, 0]);      // the (0,0) is upper left corner 
+      .range([height, 0]);      // the (0,0) is upper left corner
 
 
-// var color = d3.scaleSequential(d3.interpolateSpectral); 
-var color = d3.scaleSequential(d3.interpolateMagma); 
+// var color = d3.scaleSequential(d3.interpolateSpectral);
+var color = d3.scaleSequential(d3.interpolateMagma);
 
 // Set up the scaffolds
 var xAxis = d3.axisBottom(x)
-        .tickFormat(d3.format("d")); 
-var yAxis = d3.axisLeft(y); 
+        .tickFormat(d3.format("d"));
+var yAxis = d3.axisLeft(y);
 
 var div = d3.select("#control-panel").append("div")
     .attr("class", "tooltip")
@@ -115,7 +117,7 @@ var div = d3.select("#control-panel").append("div")
 // var svg = d3.select("#control-panel").append("svg")
 var svg = d3.select("#svg1")
       .attr("width", width + margine.left + margine.right)
-      .attr("height", height + margine.top + margine.bottom) 
+      .attr("height", height + margine.top + margine.bottom)
       .append("g")
       .attr("transform","translate("+ margine.left + "," + margine.right + ")");
 
@@ -146,16 +148,16 @@ function drawRoomType(selectedArea){
     d3.json("data/room_data.json", function(error, data) {
 
 
-        
-    
+
+
       if (error) throw error;
       var color = "steelblue";
-    
+
       data.sort(function(a, b) { return a.name - b.name; });
 
 
       data = data.filter(function(d){return d.neighbourhood_group == selectedArea;});
-    
+
       roomX.domain([0, d3.max(data, function(d) { return d.name; })]);
       console.log("x max", d3.max(data, function(d) { return d.name; }))
       roomY.domain(data.map(function(d) { return d.room_type; })).padding(0.1);
@@ -190,25 +192,25 @@ function drawRoomType(selectedArea){
 }
 
 
-var selectedArea = "Brooklyn"; 
-drawRoomType(selectedArea); 
+var selectedArea = "Brooklyn";
+drawRoomType(selectedArea);
 
 
 
 
 
 
-// create a tooltip 
+// create a tooltip
 // source: https://bl.ocks.org/sarubenfeld/56dc691df199b4055d90e66b9d5fc0d2
 var tooltip = d3.select("#control-panel").append("div")
                 .attr("class", "tooltip")
-                .style("opacity", 0); 
+                .style("opacity", 0);
 
 
-// dataset 
+// dataset
 
 function drawHist(selectedArea, maxValue){
-  // console.log("called"); 
+  // console.log("called");
 
    // var selectedArea = "Brooklyn"
 
@@ -216,7 +218,7 @@ function drawHist(selectedArea, maxValue){
   svg.selectAll("g").remove()
   // svg.selectAll("option.dropdown").remove()
 
-  // selector.remove(); 
+  // selector.remove();
   // svg.selectAll("drop").remove()
 
   // 'Brooklyn', 'Manhattan', 'Queens', 'Staten Island', 'Bronx'
@@ -225,90 +227,90 @@ function drawHist(selectedArea, maxValue){
   d3.csv("data/AB_NYC_2019.csv", function(error, data) {
     if (error) throw error;
 
-    var original = data; 
+    var original = data;
 
     if (selectedArea == "all") {
-      data = original; 
+      data = original;
     } else {
-      data = original.filter(function(d){return d.neighbourhood_group == selectedArea;});  
+      data = original.filter(function(d){return d.neighbourhood_group == selectedArea;});
     }
 
-    
+
 
     data.forEach(function(d){
-      d["price"] = +d["price"];  
-    }); 
+      d["price"] = +d["price"];
+    });
 
 
     data.sort(function(b, a){return a["number_of_reviews"]-b["number_of_reviews"]});
 
-    var str = "<p>"; 
+    var str = "<p>";
 
-    var count = 0; 
+    var count = 0;
     for(var i = 0; i < data.length && count < 5; i++){
 
       if(data[i].price < maxValue){
         if(selectedArea != "all" && data[i].neighbourhood_group == selectedArea){
-          // console.log(data[i]);  
+          // console.log(data[i]);
 
-          str += (count + 1) + ". " + data[i].name  + "</br>"; 
+          str += (count + 1) + ". " + data[i].name  + "</br>";
 
           count++ ;
         } else {
-          // console.log(data[i]);    
-          str += (count + 1) + ". " + data[i].name  + "</br>"; 
-          count++ ; 
+          // console.log(data[i]);
+          str += (count + 1) + ". " + data[i].name  + "</br>";
+          count++ ;
         }
-        
+
       }
     }
-    str += "</p>"; 
+    str += "</p>";
 
 
-    document.getElementById("room_list").innerHTML = str; 
+    document.getElementById("room_list").innerHTML = str;
 
-    // var xMin = d3.min(data, function(d){return d.price}); 
+    // var xMin = d3.min(data, function(d){return d.price});
     var xMin = 0
-    // var xMax = d3.max(data, function(d){return d.price}); 
-    var xMax = maxValue; 
-    x.domain([xMin, xMax]).nice(); 
+    // var xMax = d3.max(data, function(d){return d.price});
+    var xMax = maxValue;
+    x.domain([xMin, xMax]).nice();
 
 
-    // create a histgram 
+    // create a histgram
     // https://bl.ocks.org/santiagogaray/e203193d9a8ba21be9a25b797880ac71
     var histogram = d3.histogram()
             .value(function(d) { return d.price; })
             .domain(x.domain())
-            .thresholds(10); 
-    
-    var bins = histogram(data); 
+            .thresholds(10);
 
-    var yMin = 0; 
-    var yMax = d3.max(bins, function(d){return d.length}); 
-    y.domain([yMin, d3.max(bins, function(d){ return d.length; })]); 
+    var bins = histogram(data);
 
-    // color of the bar chart 
+    var yMin = 0;
+    var yMax = d3.max(bins, function(d){return d.length});
+    y.domain([yMin, d3.max(bins, function(d){ return d.length; })]);
+
+    // color of the bar chart
     var color = "steelblue";
-    // create x axis 
+    // create x axis
     svg.append("g")
       .attr("class", "xaxis")
       .attr("transform", "translate(0," + height + ")")
-      .call(xAxis); 
+      .call(xAxis);
 
      svg.append("text")
-              .attr("text-anchor", "middle") 
-              .attr("transform", "translate("+ (width/2) +","+(height+(35))+")") 
+              .attr("text-anchor", "middle")
+              .attr("transform", "translate("+ (width/2) +","+(height+(35))+")")
               .attr("fill", "#fff")
               .text("Price");
 
-    // create y axis 
+    // create y axis
     svg.append("g")
        .attr("class", "yaxis")
        .call(yAxis)
 
     svg.append("text")
-              .attr("text-anchor", "middle")  
-              .attr("transform", "translate("+ (-50) +","+(height/2)+")rotate(-90)") 
+              .attr("text-anchor", "middle")
+              .attr("transform", "translate("+ (-50) +","+(height/2)+")rotate(-90)")
               .attr("fill", "#fff")
               .text("Count");
 
@@ -316,7 +318,7 @@ function drawHist(selectedArea, maxValue){
       .attr("class", "tooltip")
       .style("opacity", 0);
 
-    // add bar for each 
+    // add bar for each
     var bar = svg.selectAll(".bar")
         .data(bins)
       .enter().append("g")
@@ -325,8 +327,8 @@ function drawHist(selectedArea, maxValue){
           return "translate(" + x(d.x0) + "," + y(d.length) + ")"; })
 
 
-    //// adding text to each bar 
-    // bar.append("text") 
+    //// adding text to each bar
+    // bar.append("text")
     //  // .attr("dy", ".em")
     //  .attr("y", 0)
     //  .attr("x", (x(bins[0].x1) - x(bins[0].x0)) / 2)
@@ -337,12 +339,12 @@ function drawHist(selectedArea, maxValue){
     //  .style("opacity", 1)
     //  .attr('font-size', 15);
 
-    // create bar charts 
+    // create bar charts
     bar.append("rect")
         .attr("x", 1)
         .attr("width", function(d) { return x(d.x1) - x(d.x0) - 1.5; })
         .attr("height", function(d) { return height - y(d.length); })
-        .attr("fill", function(d) { 
+        .attr("fill", function(d) {
           if( d.length == yMax){
             return d3.rgb(color).darker(1);
           } else {
@@ -351,54 +353,54 @@ function drawHist(selectedArea, maxValue){
           })
           .on("mouseover", function(d){
 
-            // show the tooltip 
+            // show the tooltip
           tooltip.transition()
               .duration(500)
-              .style("opacity", 1); 
+              .style("opacity", 1);
 
-          // contents of the tooltip 
+          // contents of the tooltip
           tooltip.html(d.x0 + " - " + d.x1 + ": " + d.length)
-              .style("left", (d3.event.pageX) + "px") 
-              .style("top", (d3.event.pageY) + "px"); 
+              .style("left", (d3.event.pageX) + "px")
+              .style("top", (d3.event.pageY) + "px");
 
           })
           .on("mouseout", function(d){
               d3.select(this)
               .transition()
                     .duration(550)
-                    .attr("fill", function(d) { 
-                      // change the color back when the mouseis out 
+                    .attr("fill", function(d) {
+                      // change the color back when the mouseis out
               return (d.length == yMax) ? d3.rgb(color).darker(1): d3.rgb(color).brighter(1);
-            }); 
+            });
 
-                    // hide tooltops 
+                    // hide tooltops
             tooltip.transition()
               .duration(500)
-              .style("opacity", 0); 
-               });  
+              .style("opacity", 0);
+               });
 
       var selector = d3.select("#menu")
                         .on("change", function(d){
-                            selectedArea = document.getElementById("dropdown").value; 
+                            selectedArea = document.getElementById("dropdown").value;
                             // console.log(selectedArea);
-                            drawHist(selectedArea, maxValue); 
-                            drawRoomType(selectedArea); 
+                            drawHist(selectedArea, maxValue);
+                            drawRoomType(selectedArea);
                         })
 
       var slider = d3.select("#price")
                       .on("change", function(d){
-                        maxValue = document.getElementById("price").value; 
-                        // console.log(maxValue); 
-                        drawHist(selectedArea, maxValue); 
-                        drawRoomType(selectedArea); 
-                        // drawRoomType(selectedArea); 
-
+                        maxValue = document.getElementById("price").value;
+                        // console.log(maxValue);
+                        drawHist(selectedArea, maxValue);
+                        drawRoomType(selectedArea);
+                        // drawRoomType(selectedArea);
+      document.getElementById("price-value").innerHTML = maxValue;
 
                       })
 
 
 
-    // selector.remove(); 
+    // selector.remove();
     // selector.exit().remove();
     // var selector = d3.select("#drop")
     //         .append("select")
@@ -407,35 +409,35 @@ function drawHist(selectedArea, maxValue){
     //             selectedArea = document.getElementById("dropdown").value;
 
 
-    //             console.log(selectedArea); 
+    //             console.log(selectedArea);
 
-    //             drawHist(selectedArea); 
-
-
-    //           }); 
+    //             drawHist(selectedArea);
 
 
-    // https://stackoverflow.com/questions/28572015/how-to-select-unique-values-in-d3-js-from-data/28572315 
-    // selector.selectAll("option") 
+    //           });
+
+
+    // https://stackoverflow.com/questions/28572015/how-to-select-unique-values-in-d3-js-from-data/28572315
+    // selector.selectAll("option")
     //     .data(d3.map(original, function(d){return d.neighbourhood_group;}).keys())
     //     .enter()
-    //     .append("option") 
+    //     .append("option")
     //     .text(function(d){return d;})
-    //     .attr("value", function(d){return d;}); 
+    //     .attr("value", function(d){return d;});
 
-    
 
-  }); 
+
+  });
 
 
 }
 
 var selectedArea = "all"
-drawHist(selectedArea, 500); 
+drawHist(selectedArea, 500);
 
 
 
-  
+
 
 
 </script>

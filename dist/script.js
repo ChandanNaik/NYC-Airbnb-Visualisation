@@ -1,7 +1,7 @@
 const deckgl = new deck.DeckGL({
   mapboxApiAccessToken: 'pk.eyJ1IjoidWJlcmRhdGEiLCJhIjoiY2pudzRtaWloMDAzcTN2bzN1aXdxZHB5bSJ9.2bkj3IiRC8wj3jLThvDGdA',
   mapStyle: 'mapbox://styles/mapbox/dark-v9',
-  longitude: -73.98,
+  longitude: -74.15,
   latitude: 40.71,
   zoom: 10,
   minZoom: 7,
