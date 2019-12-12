@@ -135,7 +135,7 @@ var roomSvg = d3.select("#svg2")
 var roomX = d3.scaleLinear().range([0, width]);
 var roomY = d3.scaleBand().range([height, 0]);
 
-function drawRoomType(selectedArea){
+function drawRoomType(selectedArea, maxPrice){
 
   roomSvg.selectAll(".bar").remove()
   roomSvg.selectAll("g").remove()
@@ -145,18 +145,54 @@ function drawRoomType(selectedArea){
              .attr("transform", "translate(" + margine.left + "," + margine.top + ")");
 
 
-    d3.json("data/room_data.json", function(error, data) {
-
-
-
-
+    // d3.json("data/room_data.json", function(error, data) {
+    d3.csv("data/AB_NYC_2019.csv", function(error, originalData) {
       if (error) throw error;
+
+
+      var newd_data = {}; 
+      
+      for(var i = 0; i < originalData.length; i++){
+
+        var room_type = originalData[i].room_type;
+        var area = originalData[i].neighbourhood_group;
+        var price = originalData[i].price;
+
+        if (newd_data[room_type] && price < maxPrice) {
+          newd_data[room_type]++;
+
+        } else if(price < maxPrice){
+          newd_data[room_type] = 1;
+        }
+      }
+
+      var updated_data = []; 
+      for (key in newd_data) {
+        // console.log(key); 
+
+        if(key.length > 1){
+          d = {
+            "room_type": key, 
+            "name": newd_data[key] 
+          }
+          updated_data.push(d);  
+        }
+
+        
+      }
+
+
+
+      var data = updated_data; 
+
+      
+
       var color = "steelblue";
 
       data.sort(function(a, b) { return a.name - b.name; });
 
 
-      data = data.filter(function(d){return d.neighbourhood_group == selectedArea;});
+      // data = data.filter(function(d){return d.neighbourhood_group == selectedArea;});
 
       roomX.domain([0, d3.max(data, function(d) { return d.name; })]);
       console.log("x max", d3.max(data, function(d) { return d.name; }))
@@ -193,7 +229,7 @@ function drawRoomType(selectedArea){
 
 
 var selectedArea = "Brooklyn";
-drawRoomType(selectedArea);
+drawRoomType(selectedArea, 500);
 
 
 
@@ -384,7 +420,7 @@ function drawHist(selectedArea, maxValue){
                             selectedArea = document.getElementById("dropdown").value;
                             // console.log(selectedArea);
                             drawHist(selectedArea, maxValue);
-                            drawRoomType(selectedArea);
+                            drawRoomType(selectedArea, maxValue);
                         })
 
       var slider = d3.select("#price")
@@ -392,7 +428,7 @@ function drawHist(selectedArea, maxValue){
                         maxValue = document.getElementById("price").value;
                         // console.log(maxValue);
                         drawHist(selectedArea, maxValue);
-                        drawRoomType(selectedArea);
+                        drawRoomType(selectedArea, maxValue);
                         // drawRoomType(selectedArea);
       document.getElementById("price-value").innerHTML = maxValue;
 
