@@ -151,19 +151,34 @@ function drawRoomType(selectedArea, maxPrice){
 
 
       var newd_data = {}; 
-      
+
       for(var i = 0; i < originalData.length; i++){
 
         var room_type = originalData[i].room_type;
         var area = originalData[i].neighbourhood_group;
         var price = originalData[i].price;
 
-        if (newd_data[room_type] && price < maxPrice) {
-          newd_data[room_type]++;
 
-        } else if(price < maxPrice){
-          newd_data[room_type] = 1;
+        if(selectedArea == "all"){
+
+          if (newd_data[room_type] && price < maxPrice) {
+            newd_data[room_type]++;
+
+          } else if(price < maxPrice){
+            newd_data[room_type] = 1;
+          }
+
+        } else if(area == selectedArea) {
+          if (newd_data[room_type] && price < maxPrice) {
+              newd_data[room_type]++;
+
+          } else if(price < maxPrice){
+              newd_data[room_type] = 1;
+          }
+
         }
+
+        
       }
 
       var updated_data = []; 
