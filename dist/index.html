@@ -18,7 +18,6 @@
     <div id='map'>
 
     </div>
-
     <div id='menu'>
       <select id='dropdown'>
         <option value="all">All</option>
@@ -39,10 +38,10 @@
       <h4>Hello</h4>
     </div>
 
+    <div id='room_list'></div>
+
 
   </div>
-
-
 
   <!-- partial -->
   <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.53.1/mapbox-gl.js'></script>
@@ -56,7 +55,7 @@
 <script type="text/javascript">
 
   // Set up the bounds of the visualization
-var margine = {top: 20, right:20, bottom:50, left:60}; 
+var margine = {top: 20, right:20, bottom:50, left:100}; 
 var width = 500 - margine.right - margine.left; 
 var height = 200 - margine.top - margine.bottom; 
 
@@ -89,6 +88,66 @@ var svg = d3.select("#control-panel").append("svg")
       .attr("transform","translate("+ margine.left + "," + margine.right + ")");
 
 
+var roomSvg = d3.select("#control-panel").append("svg")
+                .attr("width", width + margine.left + margine.right)
+                .attr("height", height + margine.top + margine.bottom) ;
+
+var g = roomSvg.append("g")
+        .attr("transform", "translate(" + margine.left + "," + margine.top + ")");
+                // .append("g")
+                // .attr("transform","translate("+ margine.left + "," + margine.right + ")");
+
+
+
+var roomX = d3.scaleLinear().range([0, width]);
+var roomY = d3.scaleBand().range([height, 0]);
+
+d3.json("data/room_data.json", function(error, data) {
+  
+    if (error) throw error;
+    var color = "steelblue";
+  
+    data.sort(function(a, b) { return a.name - b.name; });
+
+    var selectedArea = "Brooklyn"; 
+
+    data = data.filter(function(d){return d.neighbourhood_group == selectedArea;});
+  
+    roomX.domain([0, d3.max(data, function(d) { return d.name; })]);
+    console.log("x max", d3.max(data, function(d) { return d.name; }))
+    roomY.domain(data.map(function(d) { return d.room_type; })).padding(0.1);
+
+    g.append("g")
+        .attr("class", "xaxis")
+        // .attr("class", "yaxis")
+        .attr("transform", "translate(0," + height + ")")
+        // .call(d3.axisBottom(x).ticks(10).tickFormat(function(d) { return parseInt(d / 1000); }).tickSizeInner([-height]));
+        .call(d3.axisBottom(roomX));
+
+    g.append("g")
+        .attr("class", "yaxis")
+        // .attr("fill", "#fff")
+        .call(d3.axisLeft(roomY));
+
+    g.selectAll(".bar")
+        .data(data)
+      .enter().append("rect")
+        .attr("class", "bar")
+        .attr("fill", function(d){
+          return d3.rgb(color).darker(0);
+        })
+        .attr("x", 0)
+        .attr("height", roomY.bandwidth())
+        .attr("y", function(d) { return roomY(d.room_type); })
+        .attr("width", function(d) { return roomX(d.name); });
+});
+
+
+
+
+
+
+
 // create a tooltip 
 // source: https://bl.ocks.org/sarubenfeld/56dc691df199b4055d90e66b9d5fc0d2
 var tooltip = d3.select("#control-panel").append("div")
@@ -99,7 +158,7 @@ var tooltip = d3.select("#control-panel").append("div")
 // dataset 
 
 function drawHist(selectedArea, maxValue){
-  console.log("called"); 
+  // console.log("called"); 
 
    // var selectedArea = "Brooklyn"
 
@@ -129,6 +188,33 @@ function drawHist(selectedArea, maxValue){
     data.forEach(function(d){
       d["price"] = +d["price"];  
     }); 
+
+
+    data.sort(function(b, a){return a["number_of_reviews"]-b["number_of_reviews"]});
+
+    var str = ""; 
+
+    var count = 0; 
+    for(var i = 0; i < data.length && count < 5; i++){
+
+      if(data[i].price < maxValue){
+        if(selectedArea != "all" && data[i].neighbourhood_group == selectedArea){
+          // console.log(data[i]);  
+
+          str += "<p>" + data[i].name  + "</p>"; 
+
+          count++ ;
+        } else {
+          // console.log(data[i]);    
+          str += "<p>" + data[i].name  + "</p>"; 
+          count++ ; 
+        }
+        
+      }
+    }
+
+
+    document.getElementById("room_list").innerHTML = str; 
 
     // var xMin = d3.min(data, function(d){return d.price}); 
     var xMin = 0
@@ -243,16 +329,14 @@ function drawHist(selectedArea, maxValue){
       var selector = d3.select("#menu")
                         .on("change", function(d){
                             selectedArea = document.getElementById("dropdown").value; 
-
-                            console.log(selectedArea);
-
+                            // console.log(selectedArea);
                             drawHist(selectedArea, maxValue); 
                         })
 
       var slider = d3.select("#price")
                       .on("change", function(d){
                         maxValue = document.getElementById("price").value; 
-                        console.log(maxValue); 
+                        // console.log(maxValue); 
                         drawHist(selectedArea, maxValue); 
 
 
