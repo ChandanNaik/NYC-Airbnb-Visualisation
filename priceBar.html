@@ -241,6 +241,7 @@ function drawHist(selectedArea){
 	             });	
 
 		// selector.remove(); 
+		// selector.exit().remove();
 		var selector = d3.select("#drop")
 						.append("select")
 				    	.attr("id","dropdown")
@@ -251,9 +252,9 @@ function drawHist(selectedArea){
 				    		console.log(selectedArea); 
 
 				    		drawHist(selectedArea); 
-
-
 				    	}); 
+
+		var slider = d3.select("#")
 
 
 		// https://stackoverflow.com/questions/28572015/how-to-select-unique-values-in-d3-js-from-data/28572315 

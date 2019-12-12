@@ -35,3 +35,14 @@ label {
 .xaxis{
   stroke: white;
 }
+
+
+svg {
+  background-color: teal;
+  display: block;
+  margin-bottom: 5px;
+}
+
+.slider{
+  background: red; 
+}

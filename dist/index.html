@@ -20,6 +20,9 @@
 
     </div>
     <div id='menu'>
+      <h5>New York City AirBnB Listings</h5>
+
+      <h8>Filter by </h8>
       <select id='dropdown'>
         <option value="all">All</option>
         <option value="Bronx">Bronx</option>
@@ -28,22 +31,16 @@
         <option value="Queens">Queens</option>
         <option value="Staten Island">Staten Island</option>
       </select>
-
-      <div>
         <label>Price Range</label>
-        <input id="price" type="range" min="0" max="2000" step="100" value="500"></input>
-        <span id="price-value"></span>
-      </div>
+        <input id="price" type="range" min="0" max="2000" step="100" value="500" class="slider"></input>
+        <span id="price-value"> hello</span>
     </div>
-    <div id='room_list'></div>
-
    
-    
-
 
     <div class="container">
       <div class="row">
         <div class="col-sm">
+          <h6>Dist of AirBnB listings over price</h6>
            <svg width="200" height="200" id="svg1"></svg>
         </div>
         <div class="col-sm">
@@ -55,11 +52,20 @@
     <div class="container">
       <div class="row">
         <div class="col-sm">
+          <h6>Room type</h6>
           <svg width="200" height="200" id="svg2"></svg>
         </div>
         <div class="col-sm">
         </div>
         <div class="col-sm">
+        </div>
+      </div>
+    </div>
+    <div class="container">
+      <div class="row">
+        <div class="col-sm">
+          <h6>Top 5 most reivewed rooms</h6>
+           <div id='room_list'></div>
         </div>
       </div>
     </div>
@@ -159,7 +165,7 @@ function drawRoomType(selectedArea){
           // .attr("class", "yaxis")
           .attr("transform", "translate(0," + height + ")")
           // .call(d3.axisBottom(x).ticks(10).tickFormat(function(d) { return parseInt(d / 1000); }).tickSizeInner([-height]));
-          .call(d3.axisBottom(roomX));
+          .call(d3.axisBottom(roomX).ticks(5));
 
       g.append("g")
           .attr("class", "yaxis")
@@ -236,7 +242,7 @@ function drawHist(selectedArea, maxValue){
 
     data.sort(function(b, a){return a["number_of_reviews"]-b["number_of_reviews"]});
 
-    var str = ""; 
+    var str = "<p>"; 
 
     var count = 0; 
     for(var i = 0; i < data.length && count < 5; i++){
@@ -245,17 +251,18 @@ function drawHist(selectedArea, maxValue){
         if(selectedArea != "all" && data[i].neighbourhood_group == selectedArea){
           // console.log(data[i]);  
 
-          str += "<p>" + data[i].name  + "</p>"; 
+          str += (count + 1) + ". " + data[i].name  + "</br>"; 
 
           count++ ;
         } else {
           // console.log(data[i]);    
-          str += "<p>" + data[i].name  + "</p>"; 
+          str += (count + 1) + ". " + data[i].name  + "</br>"; 
           count++ ; 
         }
         
       }
     }
+    str += "</p>"; 
 
 
     document.getElementById("room_list").innerHTML = str; 
