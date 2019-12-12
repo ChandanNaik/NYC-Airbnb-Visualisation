@@ -92,8 +92,6 @@ var roomSvg = d3.select("#control-panel").append("svg")
                 .attr("width", width + margine.left + margine.right)
                 .attr("height", height + margine.top + margine.bottom) ;
 
-var g = roomSvg.append("g")
-        .attr("transform", "translate(" + margine.left + "," + margine.top + ")");
                 // .append("g")
                 // .attr("transform","translate("+ margine.left + "," + margine.right + ")");
 
@@ -102,46 +100,65 @@ var g = roomSvg.append("g")
 var roomX = d3.scaleLinear().range([0, width]);
 var roomY = d3.scaleBand().range([height, 0]);
 
-d3.json("data/room_data.json", function(error, data) {
-  
-    if (error) throw error;
-    var color = "steelblue";
-  
-    data.sort(function(a, b) { return a.name - b.name; });
+function drawRoomType(selectedArea){
 
-    var selectedArea = "Brooklyn"; 
+  roomSvg.selectAll(".bar").remove()
+  roomSvg.selectAll("g").remove()
 
-    data = data.filter(function(d){return d.neighbourhood_group == selectedArea;});
-  
-    roomX.domain([0, d3.max(data, function(d) { return d.name; })]);
-    console.log("x max", d3.max(data, function(d) { return d.name; }))
-    roomY.domain(data.map(function(d) { return d.room_type; })).padding(0.1);
 
-    g.append("g")
-        .attr("class", "xaxis")
-        // .attr("class", "yaxis")
-        .attr("transform", "translate(0," + height + ")")
-        // .call(d3.axisBottom(x).ticks(10).tickFormat(function(d) { return parseInt(d / 1000); }).tickSizeInner([-height]));
-        .call(d3.axisBottom(roomX));
+  var g = roomSvg.append("g")
+             .attr("transform", "translate(" + margine.left + "," + margine.top + ")");
+             
 
-    g.append("g")
-        .attr("class", "yaxis")
-        // .attr("fill", "#fff")
-        .call(d3.axisLeft(roomY));
+    d3.json("data/room_data.json", function(error, data) {
 
-    g.selectAll(".bar")
-        .data(data)
-      .enter().append("rect")
-        .attr("class", "bar")
-        .attr("fill", function(d){
-          return d3.rgb(color).darker(0);
-        })
-        .attr("x", 0)
-        .attr("height", roomY.bandwidth())
-        .attr("y", function(d) { return roomY(d.room_type); })
-        .attr("width", function(d) { return roomX(d.name); });
-});
 
+        
+    
+      if (error) throw error;
+      var color = "steelblue";
+    
+      data.sort(function(a, b) { return a.name - b.name; });
+
+
+      data = data.filter(function(d){return d.neighbourhood_group == selectedArea;});
+    
+      roomX.domain([0, d3.max(data, function(d) { return d.name; })]);
+      console.log("x max", d3.max(data, function(d) { return d.name; }))
+      roomY.domain(data.map(function(d) { return d.room_type; })).padding(0.1);
+
+      g.append("g")
+          .attr("class", "xaxis")
+          // .attr("class", "yaxis")
+          .attr("transform", "translate(0," + height + ")")
+          // .call(d3.axisBottom(x).ticks(10).tickFormat(function(d) { return parseInt(d / 1000); }).tickSizeInner([-height]));
+          .call(d3.axisBottom(roomX));
+
+      g.append("g")
+          .attr("class", "yaxis")
+          // .attr("fill", "#fff")
+          .call(d3.axisLeft(roomY));
+
+      g.selectAll(".bar")
+          .data(data)
+        .enter().append("rect")
+          .attr("class", "bar")
+          .attr("fill", function(d){
+            return d3.rgb(color).darker(0);
+          })
+          .attr("x", 0)
+          .attr("height", roomY.bandwidth())
+          .attr("y", function(d) { return roomY(d.room_type); })
+          .attr("width", function(d) { return roomX(d.name); });
+    });
+
+
+
+}
+
+
+var selectedArea = "Brooklyn"; 
+drawRoomType(selectedArea); 
 
 
 
@@ -331,6 +348,7 @@ function drawHist(selectedArea, maxValue){
                             selectedArea = document.getElementById("dropdown").value; 
                             // console.log(selectedArea);
                             drawHist(selectedArea, maxValue); 
+                            drawRoomType(selectedArea); 
                         })
 
       var slider = d3.select("#price")
@@ -338,6 +356,7 @@ function drawHist(selectedArea, maxValue){
                         maxValue = document.getElementById("price").value; 
                         // console.log(maxValue); 
                         drawHist(selectedArea, maxValue); 
+                        // drawRoomType(selectedArea); 
 
 
                       })
