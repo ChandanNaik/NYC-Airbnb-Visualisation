@@ -1,0 +1,16 @@
+[{"neighbourhood_group":"Bronx","room_type":"Entire home\/apt","name":379},
+	{"neighbourhood_group":"Bronx","room_type":"Private room","name":652},
+	{"neighbourhood_group":"Bronx","room_type":"Shared room","name":59},
+	{"neighbourhood_group":"Brooklyn","room_type":"Entire home\/apt","name":9558},
+	{"neighbourhood_group":"Brooklyn","room_type":"Private room","name":10127},
+	{"neighbourhood_group":"Brooklyn","room_type":"Shared room","name":413},
+	{"neighbourhood_group":"Manhattan","room_type":"Entire home\/apt","name":13193},
+	{"neighbourhood_group":"Manhattan","room_type":"Private room","name":7979},
+	{"neighbourhood_group":"Manhattan","room_type":"Shared room","name":480},
+	{"neighbourhood_group":"Queens","room_type":"Entire home\/apt","name":2096},
+	{"neighbourhood_group":"Queens","room_type":"Private room","name":3372},
+	{"neighbourhood_group":"Queens","room_type":"Shared room","name":198},
+	{"neighbourhood_group":"Staten Island","room_type":"Entire home\/apt","name":176},
+	{"neighbourhood_group":"Staten Island","room_type":"Private room","name":188},
+	{"neighbourhood_group":"Staten Island","room_type":"Shared room","name":9}
+]
