@@ -6,6 +6,7 @@
   <title>deck.gl HexagonLayer demo</title>
   <link rel='stylesheet' href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.44.1/mapbox-gl.css'>
   <link rel="stylesheet" href="./style.css">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 
 </head>
 
@@ -34,11 +35,35 @@
         <span id="price-value"></span>
       </div>
     </div>
-    <div>
-      <h4>Hello</h4>
+    <div id='room_list'></div>
+
+   
+    
+
+
+    <div class="container">
+      <div class="row">
+        <div class="col-sm">
+           <svg width="200" height="200" id="svg1"></svg>
+        </div>
+        <div class="col-sm">
+        </div>
+        <div class="col-sm">
+        </div>
+      </div>
+    </div>
+    <div class="container">
+      <div class="row">
+        <div class="col-sm">
+          <svg width="200" height="200" id="svg2"></svg>
+        </div>
+        <div class="col-sm">
+        </div>
+        <div class="col-sm">
+        </div>
+      </div>
     </div>
 
-    <div id='room_list'></div>
 
 
   </div>
@@ -81,14 +106,16 @@ var div = d3.select("#control-panel").append("div")
     .style("opacity", 0);
 
 // Set up an SVG that gives us a canvas to draw on
-var svg = d3.select("#control-panel").append("svg")
+// var svg = d3.select("#control-panel").append("svg")
+var svg = d3.select("#svg1")
       .attr("width", width + margine.left + margine.right)
       .attr("height", height + margine.top + margine.bottom) 
       .append("g")
       .attr("transform","translate("+ margine.left + "," + margine.right + ")");
 
 
-var roomSvg = d3.select("#control-panel").append("svg")
+// var roomSvg = d3.select("#control-panel").append("svg")
+var roomSvg = d3.select("#svg2")
                 .attr("width", width + margine.left + margine.right)
                 .attr("height", height + margine.top + margine.bottom) ;
 
@@ -108,7 +135,7 @@ function drawRoomType(selectedArea){
 
   var g = roomSvg.append("g")
              .attr("transform", "translate(" + margine.left + "," + margine.top + ")");
-             
+
 
     d3.json("data/room_data.json", function(error, data) {
 
@@ -356,6 +383,7 @@ function drawHist(selectedArea, maxValue){
                         maxValue = document.getElementById("price").value; 
                         // console.log(maxValue); 
                         drawHist(selectedArea, maxValue); 
+                        drawRoomType(selectedArea); 
                         // drawRoomType(selectedArea); 
 
 
