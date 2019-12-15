@@ -181,6 +181,7 @@ function drawRoomType(selectedArea, maxPrice){
         
       }
 
+      var maxValue = 0; 
       var updated_data = []; 
       for (key in newd_data) {
         // console.log(key); 
@@ -190,6 +191,9 @@ function drawRoomType(selectedArea, maxPrice){
             "room_type": key, 
             "name": newd_data[key] 
           }
+          if(newd_data[key] > maxValue){
+            maxValue = newd_data[key] ; 
+          }
           updated_data.push(d);  
         }
 
@@ -197,7 +201,7 @@ function drawRoomType(selectedArea, maxPrice){
       }
 
 
-
+      console.log("maxValue", maxValue); 
       var data = updated_data; 
 
       
@@ -230,7 +234,13 @@ function drawRoomType(selectedArea, maxPrice){
         .enter().append("rect")
           .attr("class", "bar")
           .attr("fill", function(d){
-            return d3.rgb(color).darker(0);
+            // console.log("this", d, d.name == maxValue);    
+            if(d.name == maxValue){
+              return d3.rgb(color).darker(1);  
+            } else {
+              return d3.rgb(color).brighter(1);
+            }
+            
           })
           .attr("x", 0)
           .attr("height", roomY.bandwidth())
@@ -401,34 +411,34 @@ function drawHist(selectedArea, maxValue){
           } else {
             return d3.rgb(color).brighter(1);
           }
-          })
-          .on("mouseover", function(d){
+          });
+          // .on("mouseover", function(d){
 
-            // show the tooltip
-          tooltip.transition()
-              .duration(500)
-              .style("opacity", 1);
+          //   // show the tooltip
+          // tooltip.transition()
+          //     .duration(500)
+          //     .style("opacity", 1);
 
-          // contents of the tooltip
-          tooltip.html(d.x0 + " - " + d.x1 + ": " + d.length)
-              .style("left", (d3.event.pageX) + "px")
-              .style("top", (d3.event.pageY) + "px");
+          // // contents of the tooltip
+          // tooltip.html(d.x0 + " - " + d.x1 + ": " + d.length)
+          //     .style("left", (d3.event.pageX) + "px")
+          //     .style("top", (d3.event.pageY) + "px");
 
-          })
-          .on("mouseout", function(d){
-              d3.select(this)
-              .transition()
-                    .duration(550)
-                    .attr("fill", function(d) {
-                      // change the color back when the mouseis out
-              return (d.length == yMax) ? d3.rgb(color).darker(1): d3.rgb(color).brighter(1);
-            });
+          // })
+          // .on("mouseout", function(d){
+          //     d3.select(this)
+          //     .transition()
+          //           .duration(550)
+          //           .attr("fill", function(d) {
+          //             // change the color back when the mouseis out
+          //     return (d.length == yMax) ? d3.rgb(color).darker(1): d3.rgb(color).brighter(1);
+          //   });
 
-                    // hide tooltops
-            tooltip.transition()
-              .duration(500)
-              .style("opacity", 0);
-               });
+          //           // hide tooltops
+          //   tooltip.transition()
+          //     .duration(500)
+          //     .style("opacity", 0);
+          //      });
 
       var selector = d3.select("#menu")
                         .on("change", function(d){
