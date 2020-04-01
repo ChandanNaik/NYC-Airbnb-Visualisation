@@ -9,3 +9,5 @@ A webpage that allows users to choose a neighborhood in the five boroughs of New
   2. Navigate to the cloned repository and do 'cd run' (without quotes)
   3. Execute the following command to start the server 'python3 -m http.server' (without quotes)
   4. Open your favourite browser (Google Chrome recommended) and launch the url shown on terminal.
+
+![Result](https://github.com/ChandanNaik/NYC-Airbnb-Visualisation/blob/master/NYC_Airbnb_Result.png)
